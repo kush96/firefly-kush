@@ -46,7 +46,7 @@ public class EssayFetchingService {
                 if(e.getStatusCode() == 999){
                     System.out.println("Error due to rate limiting, setting rate to " + COOLDOWN_REQUESTS_PER_SECOND + " Req per seconds");
                     updateRateLimitExceededTime();
-                    rateLimiter.setRate(COOLDOWN_REQUESTS_PER_SECOND);
+                    Thread.sleep(60*1000);
                     return getEssayFromUrl(url);
                 }
                 return "";

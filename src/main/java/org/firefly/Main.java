@@ -21,7 +21,6 @@ public class Main {
 
     public static void main(String[] args) {
         List<String> urls = readUrlsFromFile("src/main/resources/endg_urls");
-        urls = urls.size() > 10 ? urls.subList(0, 10) : new ArrayList<>(urls);
         // executor will manage MAX_THREADS number of threads. A fixed Thread Pool
         // will initialise an executor with a set of threads, the executor then in
         // its execution, based on which thread is free, will assign tasks for threads
