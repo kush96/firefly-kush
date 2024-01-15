@@ -6,8 +6,6 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -33,9 +31,6 @@ public class EssayFetchingService {
             // till it can call the API again.
             if (isRateLimitEnabled) {
                 rateLimiter.acquire();
-                if(shouldResetRateLimiter()){
-                    resetRateLimiter();
-                }
             }
             // Fetch the HTML document from the URL
             Document document;
@@ -44,7 +39,7 @@ public class EssayFetchingService {
             } catch (HttpStatusException e) {
                 System.out.println("url --> " + url + " returns status code " + e.getStatusCode());
                 if(e.getStatusCode() == 999){
-                    System.out.println("Error due to rate limiting, setting rate to " + COOLDOWN_REQUESTS_PER_SECOND + " Req per seconds");
+                    System.out.println("Error due to rate limiting, ");
                     updateRateLimitExceededTime();
                     Thread.sleep(60*1000);
                     return getEssayFromUrl(url);
@@ -63,18 +58,6 @@ public class EssayFetchingService {
             e.printStackTrace();
         }
         return allParagraphsTextInUrl.toString();
-    }
-    private static void resetRateLimiter() {
-        System.out.println("Resetting Rate Limit to " + MAX_REQUESTS_PER_SECOND + " Requests per Second");
-        rateLimiter = RateLimiter.create(MAX_REQUESTS_PER_SECOND);
-    }
-
-    private boolean shouldResetRateLimiter() {
-        long currentTime = System.currentTimeMillis();
-        if (rateLimiter.getRate() == COOLDOWN_REQUESTS_PER_SECOND)
-            System.out.println("Checking if rate limit can be brought back up again...");
-        return rateLimiter.getRate() == COOLDOWN_REQUESTS_PER_SECOND &&
-                currentTime - lastRateLimitExceededTime.get() >= TimeUnit.SECONDS.toMillis((long)(COOLDOWN_REQUESTS_PER_SECOND* 1000));
     }
     private void updateRateLimitExceededTime() {
         long currentTime = System.currentTimeMillis();
