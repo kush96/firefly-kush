@@ -15,10 +15,12 @@ cd kush-prj-firefly-submission
 # Build Docker Image
 docker build -t myapp .
 
-# Run Docker Container
-docker run -it myapp 
+# Run Docker Container, with the number of URLs you want to process
+docker run -it myapp 100
+
+# At end of execution, a pretty json will be printed 
+✨Magic ✨
 </pre>
-- ✨Magic ✨
 
 ### Tech
 
