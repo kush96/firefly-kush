@@ -7,7 +7,7 @@ My submisssion for the assignment [here](https://docs.google.com/document/d/1GdL
 - On terminal
 <pre>
 # Clone the repository
-git clone [https://github.com/username/repository.git](https://github.com/kush96/firefly-kush.git)
+git clone https://github.com/kush96/firefly-kush.git
 
 # Change into the repository directory
 cd firefly-kush
