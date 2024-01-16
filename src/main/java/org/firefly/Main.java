@@ -1,5 +1,7 @@
 package org.firefly;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.firefly.service.EssayAnalysingService;
 import org.firefly.service.EssayFetchingService;
 
@@ -7,14 +9,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.*;
+import java.util.stream.Collectors;
 
 
 public class Main {
@@ -22,7 +19,9 @@ public class Main {
 
     public static void main(String[] args) {
         List<String> urls = readUrlsFromFile("/endg_urls");
-        urls = urls.size() > 10 ? urls.subList(0, 10) : new ArrayList<>(urls);
+        int numOfUrlsToProcess = args.length > 0 ? parseArg(args[0], urls.size()) : urls.size();
+        urls = urls.subList(0, Math.min(numOfUrlsToProcess, urls.size()));
+
         // executor will manage MAX_THREADS number of threads. A fixed Thread Pool
         // will initialise an executor with a set of threads, the executor then in
         // its execution, based on which thread is free, will assign tasks for threads
@@ -54,11 +53,19 @@ public class Main {
             while (!executor.awaitTermination(1, TimeUnit.HOURS)) {
                 System.out.println("Still waiting for tasks to complete...");
             }
+            System.out.println("*********************XXXXXXXXXXX*********************");
+            System.out.println("Most Frequent Valid Words");
             // count and print top 10 frequent valid words
+            // Convert the top 10 entries of the map into a JSON string
+            Map<String, Integer> topEntries = new LinkedHashMap<>();
             EssayAnalysingService.wordCntMap.entrySet().stream()
                     .sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))
                     .limit(10)
-                    .forEach(entry -> System.out.println(entry.getKey() + ": " + entry.getValue()));
+                    .forEachOrdered(entry -> topEntries.put(entry.getKey(), entry.getValue()));
+
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            String prettyJson = gson.toJson(topEntries);
+            System.out.println(prettyJson);
 
 
         } catch (InterruptedException ie) {
@@ -83,6 +90,14 @@ public class Main {
             e.printStackTrace();
         }
         return urls;
+    }
+    private static int parseArg(String arg, int defaultValue) {
+        try {
+            return Integer.parseInt(arg);
+        } catch (NumberFormatException e) {
+            System.err.println("Invalid number format. Using default value: " + defaultValue);
+            return defaultValue;
+        }
     }
 }
 
