@@ -59,3 +59,15 @@ public class EssayFetchingService {
         return allParagraphsTextInUrl.toString();
     }
 }
+
+
+//the: 672660
+//        and: 333788
+//        that: 174713
+//        with: 112792
+//        The: 107549
+//        you: 94693
+//        has: 62883
+//        have: 61546
+//        from: 59956
+//        your: 49436

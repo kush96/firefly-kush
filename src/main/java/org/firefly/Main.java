@@ -1,11 +1,12 @@
 package org.firefly;
 
-import org.firefly.dto.EssayData;
 import org.firefly.service.EssayAnalysingService;
 import org.firefly.service.EssayFetchingService;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -20,7 +21,8 @@ public class Main {
     private static final int MAX_THREADS = 10; // Assuming MAX_THREADS is defined
 
     public static void main(String[] args) {
-        List<String> urls = readUrlsFromFile("src/main/resources/endg_urls");
+        List<String> urls = readUrlsFromFile("/endg_urls");
+        urls = urls.size() > 10 ? urls.subList(0, 10) : new ArrayList<>(urls);
         // executor will manage MAX_THREADS number of threads. A fixed Thread Pool
         // will initialise an executor with a set of threads, the executor then in
         // its execution, based on which thread is free, will assign tasks for threads
@@ -68,11 +70,11 @@ public class Main {
 
     }
 
-    private static List<String> readUrlsFromFile(String filePath) {
+    private static List<String> readUrlsFromFile(String resourcePath) {
         List<String> urls = new ArrayList<>();
-        Path path = Paths.get(filePath);
 
-        try (BufferedReader reader = Files.newBufferedReader(path)) {
+        try (InputStream inputStream = Main.class.getResourceAsStream(resourcePath);
+             BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 urls.add(line);
