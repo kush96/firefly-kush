@@ -22,6 +22,13 @@ docker run -it myapp 100
 ✨Magic ✨
 </pre>
 
+### Workflow Diagram
+
+![Workflow Diagram](https://i.postimg.cc/XYSrS5LZ/Screenshot-2024-01-17-at-12-21-16-AM.png)
+
+
+
+
 ### Tech
 
 This project has made use of the following
@@ -33,10 +40,22 @@ This project has made use of the following
 - Other Threadsafe elements - Threadsafe Hashmap, atomic constants etc.
 - Docker - So the program can run seemlessly on your systems
 
-### Workflow Diagram
+### Output
 
-![Workflow Diagram](https://i.postimg.cc/XYSrS5LZ/Screenshot-2024-01-17-at-12-21-16-AM.png)
-
-
+Output of running these over 40k URLs reulted in the below for me
+```
+{
+    "the": 672660,
+    "and": 333788,
+    "that": 174713,
+    "with": 112792,
+    "The": 107549,
+    "you": 94693,
+    "has": 62883,
+    "have": 61546,
+    "from": 59956,
+    "your": 49436
+}
+```
 
 
