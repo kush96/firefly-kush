@@ -1,16 +1,16 @@
 # Top Words Fetcher
 ##### Kush Singh Assignment Submission
 My submisssion for the assignment [here](https://docs.google.com/document/d/1GdLjenD201pNl3LOmvaBM0a56DIIEC88fBd3kimBPrQ/edit?pli=1).
-### Installation Guide
+### Installation
 
 - Install [Docker](https://www.docker.com/get-started/)
 - On terminal
 <pre>
 # Clone the repository
-git clone https://github.com/username/repository.git
+git clone [https://github.com/username/repository.git](https://github.com/kush96/firefly-kush.git)
 
 # Change into the repository directory
-cd kush-prj-firefly-submission
+cd firefly-kush
 
 # Build Docker Image
 docker build -t myapp .
