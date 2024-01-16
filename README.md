@@ -3,8 +3,21 @@
 My submisssion for the assignment [here](https://docs.google.com/document/d/1GdLjenD201pNl3LOmvaBM0a56DIIEC88fBd3kimBPrQ/edit?pli=1).
 ### Installation Guide
 
-- Type some Markdown on the left
-- See HTML in the right
+- Install [Docker](https://www.docker.com/get-started/)
+- On terminal
+<pre>
+# Clone the repository
+git clone https://github.com/username/repository.git
+
+# Change into the repository directory
+cd kush-prj-firefly-submission
+
+# Build Docker Image
+docker build -t myapp .
+
+# Run Docker Container
+docker run -it myapp 
+</pre>
 - ✨Magic ✨
 
 ### Tech

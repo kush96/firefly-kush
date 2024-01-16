@@ -6,14 +6,12 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class EssayFetchingService {
     private static final Double MAX_REQUESTS_PER_SECOND = 15.0;
-    private static final Double COOLDOWN_REQUESTS_PER_SECOND = 1.0/25.0;
+    private static final Integer COOLDOWN_PERIOD_IN_SECONDS = 60;
     // I have made use of Guava's Rate Limiter, as this is thread safe, easy to use implementation
     // of a rate limiter. The rate of rate limiter can be dynamically changed as well during
     // execution if needed.
@@ -33,9 +31,6 @@ public class EssayFetchingService {
             // till it can call the API again.
             if (isRateLimitEnabled) {
                 rateLimiter.acquire();
-                if(shouldResetRateLimiter()){
-                    resetRateLimiter();
-                }
             }
             // Fetch the HTML document from the URL
             Document document;
@@ -44,15 +39,14 @@ public class EssayFetchingService {
             } catch (HttpStatusException e) {
                 System.out.println("url --> " + url + " returns status code " + e.getStatusCode());
                 if(e.getStatusCode() == 999){
-                    System.out.println("Error due to rate limiting, setting rate to " + COOLDOWN_REQUESTS_PER_SECOND + " Req per seconds");
-                    updateRateLimitExceededTime();
-                    Thread.sleep(60*1000);
+                    System.out.println("Error due to rate limiting, thread sleeping for " + COOLDOWN_PERIOD_IN_SECONDS + "seconds");
+                    Thread.sleep(COOLDOWN_PERIOD_IN_SECONDS*1000);
                     return getEssayFromUrl(url);
                 }
                 return "";
             }
             successfulUrlFetchCount.incrementAndGet();
-            System.out.println("url --> " + url + " fetched succesfully, success url fetch cnt --> " + successfulUrlFetchCount.get());
+            System.out.println("url --> " + url + " fetched successfully, success url fetch cnt --> " + successfulUrlFetchCount.get());
             // Select all paragraph elements from the document
             Elements paragraphs = document.select("p");
             // Iterate through the paragraphs and append their text content
@@ -64,21 +58,16 @@ public class EssayFetchingService {
         }
         return allParagraphsTextInUrl.toString();
     }
-    private static void resetRateLimiter() {
-        System.out.println("Resetting Rate Limit to " + MAX_REQUESTS_PER_SECOND + " Requests per Second");
-        rateLimiter = RateLimiter.create(MAX_REQUESTS_PER_SECOND);
-    }
-
-    private boolean shouldResetRateLimiter() {
-        long currentTime = System.currentTimeMillis();
-        if (rateLimiter.getRate() == COOLDOWN_REQUESTS_PER_SECOND)
-            System.out.println("Checking if rate limit can be brought back up again...");
-        return rateLimiter.getRate() == COOLDOWN_REQUESTS_PER_SECOND &&
-                currentTime - lastRateLimitExceededTime.get() >= TimeUnit.SECONDS.toMillis((long)(COOLDOWN_REQUESTS_PER_SECOND* 1000));
-    }
-    private void updateRateLimitExceededTime() {
-        long currentTime = System.currentTimeMillis();
-        lastRateLimitExceededTime.updateAndGet(x -> Math.max(x, currentTime));
-    }
-
 }
+
+
+//the: 672660
+//        and: 333788
+//        that: 174713
+//        with: 112792
+//        The: 107549
+//        you: 94693
+//        has: 62883
+//        have: 61546
+//        from: 59956
+//        your: 49436
